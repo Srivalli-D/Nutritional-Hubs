@@ -9,10 +9,12 @@ import {
   Dumbbell,
   LogOut,
   Leaf,
-  BookOpen
+  BookOpen,
+  Sparkles as SparklesIcon
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "motion/react";
+import { useAuth } from "../contexts/AuthContext";
 
 const navItems = [
   { label: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -25,6 +27,8 @@ const navItems = [
 ];
 
 export default function Sidebar({ onLogout }: { onLogout: () => void }) {
+  const { user } = useAuth();
+  
   return (
     <aside className="w-64 h-full bg-white/40 backdrop-blur-2xl border-r border-white/60 p-6 flex flex-col z-10 sticky top-0 h-screen">
       <div className="flex items-center gap-3 mb-10 px-2">
@@ -62,17 +66,21 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
           <div className="flex items-center gap-2">
             <span className="text-xl font-display font-bold text-emerald-700">14 Days</span>
             <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center shadow-sm">
-              <Sparkles className="w-3 h-3 text-white fill-white" />
+              <SparklesIcon className="w-3 h-3 text-white fill-white" />
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-3 px-2">
           <div className="w-10 h-10 rounded-full border-2 border-emerald-300 bg-white overflow-hidden shadow-sm">
-            <img src="https://i.pravatar.cc/100?img=12" alt="Avatar" className="w-full h-full object-cover" />
+            <img 
+              src={user?.photoURL || "https://i.pravatar.cc/100?img=12"} 
+              alt="Avatar" 
+              className="w-full h-full object-cover" 
+            />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-slate-800 truncate">Elena Rose</p>
+            <p className="text-sm font-bold text-slate-800 truncate">{user?.displayName || 'Anonymous Member'}</p>
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Pro Member</p>
           </div>
           <button 
@@ -86,7 +94,3 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
     </aside>
   );
 }
-
-const Sparkles = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clipRule="evenodd"/></svg>
-);

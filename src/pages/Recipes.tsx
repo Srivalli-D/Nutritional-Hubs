@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Search, Utensils, Timer, Flame, Filter, Sparkles, ChefHat, Info } from "lucide-react";
+import { Search, Utensils, Timer, Flame, Filter, Sparkles, ChefHat, Info, X } from "lucide-react";
 
 export default function Recipes() {
   const [query, setQuery] = useState("");
@@ -8,6 +8,7 @@ export default function Recipes() {
   const [recipes, setRecipes] = useState<any[]>([]);
   const [cuisine, setCuisine] = useState("");
   const [dietary, setDietary] = useState("");
+  const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
 
   const fetchRecipes = async () => {
     setIsLoading(true);
@@ -140,7 +141,10 @@ export default function Recipes() {
                     <p className="text-xs text-emerald-700 italic font-medium leading-relaxed leading-snug">"{recipe.why_suits_user}"</p>
                   </div>
 
-                  <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-emerald-900 transition-all text-sm shadow-xl shadow-slate-900/10">
+                  <button 
+                    onClick={() => setSelectedRecipe(recipe)}
+                    className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-emerald-900 transition-all text-sm shadow-xl shadow-slate-900/10"
+                  >
                     View Full Recipe
                   </button>
                 </div>
@@ -152,6 +156,78 @@ export default function Recipes() {
           <div className="py-20 flex flex-col items-center opacity-30 text-center">
             <Utensils className="w-16 h-16 mb-6" />
             <p className="font-display font-medium text-lg">Enter your ingredients and goal to start discovered healthy flavors.</p>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Recipe Modal */}
+      <AnimatePresence>
+        {selectedRecipe && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-0">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedRecipe(null)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-xl"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-2xl bg-white rounded-[3rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            >
+              <div className="flex items-center justify-between p-8 border-b border-slate-50 shrink-0">
+                <h3 className="text-2xl font-display font-bold text-slate-900 uppercase italic">{selectedRecipe.name}</h3>
+                <button onClick={() => setSelectedRecipe(null)} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-8 overflow-y-auto space-y-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {[
+                    { label: 'Time', val: selectedRecipe.prep_time },
+                    { label: 'Cals', val: selectedRecipe.calories },
+                    { label: 'Prot.', val: selectedRecipe.macros?.protein + 'g' },
+                    { label: 'Carbs', val: selectedRecipe.macros?.carbs + 'g' },
+                  ].map(stat => (
+                    <div key={stat.label} className="bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-inner">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">{stat.label}</p>
+                      <p className="font-bold text-slate-800">{stat.val}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-4 border-b border-emerald-100 pb-2">Ingredients</h4>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedRecipe.ingredients_list?.map((ing: string, i: number) => (
+                      <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                        {ing}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-4 border-b border-emerald-100 pb-2">Instructions</h4>
+                  <div className="prose prose-sm prose-slate max-w-none text-slate-600 font-medium leading-relaxed">
+                    <p>{selectedRecipe.instructions || "Contact Coach for step-by-step guidance."}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 bg-slate-50 border-t border-slate-100 shrink-0">
+                <button 
+                  onClick={() => setSelectedRecipe(null)}
+                  className="w-full py-4 bg-emerald-900 text-white rounded-2xl font-bold hover:bg-emerald-800 transition-all shadow-lg shadow-emerald-900/10"
+                >
+                  Done
+                </button>
+              </div>
+            </motion.div>
           </div>
         )}
       </AnimatePresence>

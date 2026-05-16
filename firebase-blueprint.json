@@ -42,6 +42,17 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "date", "meals"]
+    },
+    "WeightLog": {
+      "title": "Weight Log",
+      "description": "Log of user's weight over time.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "weight": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "weight", "timestamp"]
     }
   },
   "firestore": {
@@ -56,6 +67,10 @@
     "/users/{userId}/mealPlans/{planId}": {
       "schema": "MealPlan",
       "description": "Stores generated meal plans for a user."
+    },
+    "/users/{userId}/weightLogs/{logId}": {
+      "schema": "WeightLog",
+      "description": "Stores weight logs for a user."
     }
   }
 }

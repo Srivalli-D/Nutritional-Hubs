@@ -14,7 +14,8 @@ import {
   Zap,
   Trophy,
   Activity,
-  X
+  X,
+  Utensils
 } from "lucide-react";
 import { 
   BarChart, 

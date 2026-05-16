@@ -42,6 +42,14 @@ service cloud.firestore {
         allow write: if isOwner(userId)
           && request.resource.data.userId == userId;
       }
+
+      // Weight Logs Subcollection
+      match /weightLogs/{logId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && request.resource.data.userId == userId;
+        allow delete: if isOwner(userId);
+      }
     }
   }
 }
