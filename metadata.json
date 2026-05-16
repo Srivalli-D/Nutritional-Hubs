@@ -1,0 +1,12 @@
+{
+  "name": "Remix: Nourishment Hub",
+  "description": "A premium AI-powered nutrition and wellness platform with smart meal planning, health analytics, and a personalized AI nutrition coach.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
